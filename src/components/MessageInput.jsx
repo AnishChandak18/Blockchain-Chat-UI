@@ -1,15 +1,10 @@
 import React, { useState } from 'react';
 import { Send } from 'lucide-react';
 
-interface MessageInputProps {
-  onSendMessage: (content: string) => void;
-  isConnected: boolean;
-}
-
-export const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, isConnected }) => {
+export const MessageInput = ({ onSendMessage, isConnected }) => {
   const [message, setMessage] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (message.trim() && isConnected) {
       onSendMessage(message);

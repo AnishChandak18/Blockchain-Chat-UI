@@ -88,6 +88,7 @@ export function Web3Provider({ children }) {
   return (
     <Web3Context.Provider
       value={{
+        signer,
         address,
         isConnected,
         connect,

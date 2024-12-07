@@ -1,15 +1,14 @@
 import { useState, useEffect, useCallback } from 'react';
 import { ethers } from 'ethers';
 import { CHAT_CONTRACT_ABI } from '../contracts/ChatContract';
-import { Message } from '../types';
 
 const CONTRACT_ADDRESS = '0x123...'; // Replace with your deployed contract address
 
 export function useWeb3() {
-  const [provider, setProvider] = useState<ethers.BrowserProvider | null>(null);
-  const [signer, setSigner] = useState<ethers.JsonRpcSigner | null>(null);
-  const [contract, setContract] = useState<ethers.Contract | null>(null);
-  const [address, setAddress] = useState<string>('');
+  const [provider, setProvider] = useState(null);
+  const [signer, setSigner] = useState(null);
+  const [contract, setContract] = useState(null);
+  const [address, setAddress] = useState('');
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
@@ -46,7 +45,7 @@ export function useWeb3() {
     setIsConnected(false);
   }, []);
 
-  const sendMessage = useCallback(async (content: string) => {
+  const sendMessage = useCallback(async (content) => {
     if (!contract) return;
 
     try {
@@ -59,12 +58,12 @@ export function useWeb3() {
     }
   }, [contract]);
 
-  const getMessages = useCallback(async (): Promise<Message[]> => {
+  const getMessages = useCallback(async () => {
     if (!contract) return [];
 
     try {
       const messages = await contract.getMessages();
-      return messages.map((msg: any, index: number) => ({
+      return messages.map((msg, index) => ({
         id: index.toString(),
         sender: msg.sender,
         content: msg.content,

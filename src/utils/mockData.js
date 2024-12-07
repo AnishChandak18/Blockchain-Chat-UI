@@ -1,16 +1,14 @@
-import { Message } from '../types';
-
-export const shortenAddress = (address: string): string => {
+export const shortenAddress = (address) => {
   return `${address.slice(0, 6)}...${address.slice(-4)}`;
 };
 
-export const generateMockTxHash = (): string => {
+export const generateMockTxHash = () => {
   return '0x' + Array.from({ length: 64 }, () => 
     Math.floor(Math.random() * 16).toString(16)
   ).join('');
 };
 
-export const mockMessages: Message[] = [
+export const mockMessages= [
   {
     id: '1',
     sender: '0x742d35Cc6634C0532925a3b844Bc454e4438f44e',

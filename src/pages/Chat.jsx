@@ -11,7 +11,6 @@ import {
   Button,
 } from '@mui/material';
 import { Send, Logout } from '@mui/icons-material';
-import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useWeb3 } from '../context/Web3Context';
 import MessageList from '../components/MessageList';

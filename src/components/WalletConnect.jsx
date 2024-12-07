@@ -3,14 +3,7 @@ import { Button, Box, Typography } from '@mui/material';
 import { AccountBalanceWallet, Logout } from '@mui/icons-material';
 import { shortenAddress } from '../utils/mockData';
 
-interface WalletConnectProps {
-  isConnected: boolean;
-  address: string;
-  onConnect: () => void;
-  onDisconnect: () => void;
-}
-
-export const WalletConnect: React.FC<WalletConnectProps> = ({
+export const WalletConnect = ({
   isConnected,
   address,
   onConnect,
