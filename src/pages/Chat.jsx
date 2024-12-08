@@ -1,24 +1,13 @@
 import { useState, useEffect } from 'react';
-import {
-  Box,
-  Container,
-  Paper,
-  TextField,
-  IconButton,
-  Typography,
-  AppBar,
-  Toolbar,
-  Button,
-} from '@mui/material';
-import { Send, Logout } from '@mui/icons-material';
+import { Box, Container, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useWeb3 } from '../context/Web3Context';
 import MessageList from '../components/MessageList';
-import { shortenAddress } from '../utils/helpers';
+import MessageInput from '../components/MessageInput';
+import Header from '../components/Header';
 import toast from 'react-hot-toast';
 
 function Chat() {
-  const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const { address, disconnect, sendMessage, getMessages } = useWeb3();
   const navigate = useNavigate();
@@ -36,10 +25,7 @@ function Chat() {
     }
   };
 
-  const handleSend = async (e) => {
-    e.preventDefault();
-    if (!message.trim()) return;
-
+  const handleSend = async (message) => {
     try {
       toast.loading('Sending message...');
       const txHash = await sendMessage(message);
@@ -53,7 +39,6 @@ function Chat() {
       };
       
       setMessages((prev) => [...prev, newMessage]);
-      setMessage('');
       toast.success('Message sent successfully!');
     } catch (error) {
       toast.error('Failed to send message');
@@ -67,17 +52,8 @@ function Chat() {
 
   return (
     <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            {shortenAddress(address)}
-          </Typography>
-          <Button color="inherit" onClick={handleDisconnect} startIcon={<Logout />}>
-            Disconnect
-          </Button>
-        </Toolbar>
-      </AppBar>
-
+      <Header address={address} onDisconnect={handleDisconnect} />
+      
       <Container maxWidth="md" sx={{ flex: 1, py: 2, display: 'flex', flexDirection: 'column' }}>
         <Paper
           elevation={3}
@@ -89,22 +65,7 @@ function Chat() {
           }}
         >
           <MessageList messages={messages} currentAddress={address} />
-          
-          <Box component="form" onSubmit={handleSend} sx={{ p: 2, borderTop: 1, borderColor: 'divider' }}>
-            <Box sx={{ display: 'flex', gap: 1 }}>
-              <TextField
-                fullWidth
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder="Type your message..."
-                variant="outlined"
-                size="small"
-              />
-              <IconButton type="submit" color="primary" disabled={!message.trim()}>
-                <Send />
-              </IconButton>
-            </Box>
-          </Box>
+          <MessageInput onSendMessage={handleSend} isConnected={true} />
         </Paper>
       </Container>
     </Box>

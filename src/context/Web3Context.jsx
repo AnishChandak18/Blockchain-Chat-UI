@@ -1,21 +1,18 @@
 import { createContext, useContext, useState, useCallback, useEffect } from 'react';
-import { ethers } from 'ethers';
-import { CHAT_CONTRACT_ABI } from '../contracts/ChatContract';
+import { getProvider, getContract } from '../utils/web3';
 import toast from 'react-hot-toast';
 
-const CONTRACT_ADDRESS = '0x123...'; // Replace with your deployed contract address
 const Web3Context = createContext(null);
 
 export function Web3Provider({ children }) {
   const [provider, setProvider] = useState(null);
-  const [signer, setSigner] = useState(null);
   const [contract, setContract] = useState(null);
   const [address, setAddress] = useState('');
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    if (window.ethereum) {
-      const provider = new ethers.BrowserProvider(window.ethereum);
+    const provider = getProvider();
+    if (provider) {
       setProvider(provider);
     }
   }, []);
@@ -23,19 +20,19 @@ export function Web3Provider({ children }) {
   const connect = useCallback(async () => {
     if (!provider) {
       toast.error('Please install MetaMask!');
-      return;
+      return false;
     }
 
     try {
       const signer = await provider.getSigner();
       const address = await signer.getAddress();
-      const contract = new ethers.Contract(
-        CONTRACT_ADDRESS,
-        CHAT_CONTRACT_ABI,
-        signer
-      );
+      const contract = await getContract(provider);
 
-      setSigner(signer);
+      if (!contract) {
+        toast.error('Failed to connect to contract');
+        return false;
+      }
+
       setAddress(address);
       setContract(contract);
       setIsConnected(true);
@@ -48,7 +45,6 @@ export function Web3Provider({ children }) {
   }, [provider]);
 
   const disconnect = useCallback(() => {
-    setSigner(null);
     setAddress('');
     setContract(null);
     setIsConnected(false);
@@ -88,7 +84,6 @@ export function Web3Provider({ children }) {
   return (
     <Web3Context.Provider
       value={{
-        signer,
         address,
         isConnected,
         connect,

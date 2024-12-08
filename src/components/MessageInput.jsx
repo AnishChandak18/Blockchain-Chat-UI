@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { Send } from 'lucide-react';
+import { useState } from 'react';
+import { Box, TextField, IconButton } from '@mui/material';
+import { Send } from '@mui/icons-material';
 
-export const MessageInput = ({ onSendMessage, isConnected }) => {
+function MessageInput({ onSendMessage, isConnected }) {
   const [message, setMessage] = useState('');
 
   const handleSubmit = (e) => {
@@ -13,24 +14,23 @@ export const MessageInput = ({ onSendMessage, isConnected }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-4 border-t border-gray-200">
-      <div className="flex space-x-2">
-        <input
-          type="text"
+    <Box component="form" onSubmit={handleSubmit} sx={{ p: 2, borderTop: 1, borderColor: 'divider' }}>
+      <Box sx={{ display: 'flex', gap: 1 }}>
+        <TextField
+          fullWidth
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder={isConnected ? "Type your message..." : "Connect wallet to chat"}
           disabled={!isConnected}
-          className="flex-1 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:border-blue-500"
+          variant="outlined"
+          size="small"
         />
-        <button
-          type="submit"
-          disabled={!isConnected || !message.trim()}
-          className="bg-blue-500 text-white rounded-lg px-4 py-2 hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          <Send size={20} />
-        </button>
-      </div>
-    </form>
+        <IconButton type="submit" color="primary" disabled={!message.trim() || !isConnected}>
+          <Send />
+        </IconButton>
+      </Box>
+    </Box>
   );
-};
+}
+
+export default MessageInput;

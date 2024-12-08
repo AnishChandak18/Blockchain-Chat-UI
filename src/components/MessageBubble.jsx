@@ -18,6 +18,7 @@ function MessageBubble({ message, isOwn }) {
           p: 2,
           bgcolor: isOwn ? 'primary.main' : 'grey.100',
           color: isOwn ? 'white' : 'text.primary',
+          borderRadius: 2,
         }}
       >
         <Typography variant="caption" display="block" gutterBottom>
@@ -35,7 +36,7 @@ function MessageBubble({ message, isOwn }) {
               href={`https://etherscan.io/tx/${message.txHash}`}
               target="_blank"
               rel="noopener noreferrer"
-              sx={{ display: 'flex', alignItems: 'center' }}
+              sx={{ display: 'flex', alignItems: 'center', color: isOwn ? 'inherit' : 'primary.main' }}
             >
               <Launch sx={{ fontSize: 12, ml: 0.5 }} />
             </Link>
